@@ -13,8 +13,8 @@ type Ipad struct{
 
 func NewIpad(ip string, port int) Ipad {
     return Ipad{
-        ipad:   []string{ip},  // Initialize IP slice with the provided value
-        port: []int{port}, // Initialize Port slice with the provided value
+        ipad:   []string{ip},  
+        port: []int{port}, 
     }
 }
 func (i Ipad )add(ipad string, port int ){
