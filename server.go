@@ -6,9 +6,7 @@ import ("fmt"
 		"github.com/pr-a-nav/PeerLink"
 )
 
-func main() {
-	fmt.Println("hello world")
-}
+
 func vishwas() {
 	fmt.Println("hello pranav")
 }
