@@ -9,6 +9,7 @@ import ("fmt"
 )
 
 func server(){
+	fmt.Println("server started")
 	ln ,err := net.Listen("tcp", ":9000")
 	 if err!=nil{
 		fmt.Println("error", err)
@@ -46,7 +47,7 @@ type Ipad struct{
 type Group struct{
    ID string
    Name string
-   Members map[string]*Member
+   Members map[string]*Ipad
    messages []Message
 }
 
@@ -55,10 +56,6 @@ type Message struct{
 	Content string
 }
 
-type Member struct{
-    ID string
-	Port int
-}
 
 
 func NewIpad(ip string, port int) Ipad {
@@ -76,4 +73,5 @@ i.port = append(i.port, port)
 func main(){
 	res := NewIpad("12.45.56", 45)
 	res.add("12.4.6", 45)
+	server()
 }
