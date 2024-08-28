@@ -2,12 +2,40 @@ package main
 
 import ("fmt"
         "net"
+		"context"
+        "encoding/json"
+        "fmt"
+        "sync"
+		 "github.com/pr-a-nav/Peerlink/orbitdb"
 		// "net/http"
 		
 
 		
 )
 
+
+ type peerID  = map[string]string{}
+
+
+ type RendezvousPoint struct {
+	identifier  int
+	peerlist  []peerID
+	    mu   sync.Mutex
+
+ }
+ func  CollectDataFromIP(rp *RendezvousPoint, ipAddr string, data interface{}) error {
+	
+
+	rp.peerlist[ipAddr] = data
+
+	// Store updated rendezvous point in OrbitDB
+	// err := rm.db.Put(rp.Identifier, rp)
+	// if err != nil {
+	// 		return fmt.Errorf("failed to update rendezvous point in OrbitDB: %w", err)
+	// }
+
+	return nil
+}
 func server(){
 	fmt.Println("server started")
 	ln ,err := net.Listen("tcp", ":9000")
