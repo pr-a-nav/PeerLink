@@ -18,6 +18,6 @@ func main() {
         fmt.Println(err)
     }
 	
-
+    fmt.Println(res)
     conn.Close()
 }

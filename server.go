@@ -2,11 +2,10 @@ package main
 
 import ("fmt"
         "net"
-		"context"
-        "encoding/json"
-        "fmt"
+		// "context"
+        // "encoding/json"
         "sync"
-		 "github.com/pr-a-nav/Peerlink/orbitdb"
+		// "github.com/pr-a-nav/Peerlink/orbitdb"
 		// "net/http"
 		
 
@@ -14,7 +13,7 @@ import ("fmt"
 )
 
 
- type peerID  = map[string]string{}
+ type peerID  = map[string]string
 
 
  type RendezvousPoint struct {
@@ -26,7 +25,7 @@ import ("fmt"
  func  CollectDataFromIP(rp *RendezvousPoint, ipAddr string, data interface{}) error {
 	
 
-	rp.peerlist[ipAddr] = data
+	// rp.peerlist[ipAddr] = data
 
 	// Store updated rendezvous point in OrbitDB
 	// err := rm.db.Put(rp.Identifier, rp)
@@ -48,18 +47,26 @@ func server(){
 			fmt.Println("error", err)
 		}
 		fmt.Println(req)
+		go handle(req)
 	}
 
 }
 
 func handle(conn net.Conn){
   defer conn.Close()
+   res := New("12.45.56", 45)
 
    add := conn.RemoteAddr().(*net.TCPAddr)
    clientIP := add.IP.String()
    clientport := add.Port
+   register(res, clientIP, clientport)
 
    fmt.Printf("IP %s port %d", clientIP,clientport)
+}
+
+func register(Ipadd Ipad, ip string , port int){
+	Ipad.add(Ipadd, ip, port)
+
 }
 
 
@@ -86,7 +93,7 @@ type Message struct{
 
 
 
-func NewIpad(ip string, port int) Ipad {
+func New(ip string, port int) Ipad {
     return Ipad{
         ipad:   []string{ip},  
         port: []int{port}, 
@@ -99,7 +106,7 @@ i.port = append(i.port, port)
 }
 
 func main(){
-	res := NewIpad("12.45.56", 45)
+	res := New("12.45.56", 45)
 	res.add("12.4.6", 45)
 	server()
 }
