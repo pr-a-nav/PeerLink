@@ -2,6 +2,7 @@ package main
 
 import ("fmt"
         "net"
+		"bufio"
 		// "context"
         // "encoding/json"
         "sync"
@@ -46,7 +47,9 @@ func server(){
 		if err!=nil{
 			fmt.Println("error", err)
 		}
-		fmt.Println(req)
+		reader  := bufio.NewReader(req)
+		message ,err := reader.ReadString(byte(reader.Buffered()))
+		fmt.Println(message)
 		go handle(req)
 	}
 
