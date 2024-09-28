@@ -1,8 +1,9 @@
 package main
 
 import (
-    "fmt"
-    "net"
+	"bufio"
+	"fmt"
+	"net"
 )
 
 func main() {
@@ -12,12 +13,31 @@ func main() {
     if err != nil {
         fmt.Println(err)
     }
+    println("requested")
 
-    res , err := conn.Write([]byte(" wanna join your server"))
-    if err != nil {
+    // res , err := conn.Write([]byte(" wanna join your server"))
+    // if err != nil {
+    //     fmt.Println(err)
+    // }
+    reader := bufio.NewReader(conn)
+    group,err :=reader.ReadString(byte(reader.Buffered()))
+    if err !=nil{
         fmt.Println(err)
     }
-	
-    fmt.Println(res)
+       
+        
+    fmt.Println(group)
+    // fmt.Println(res)
     conn.Close()
+}
+
+func list(conn net.Conn){
+    reader := bufio.NewReader(conn)
+    for {
+        group,err :=reader.ReadString(byte(reader.Buffered()))
+        if err!= nil{
+            break
+        }
+    fmt.Println(group)}
+
 }

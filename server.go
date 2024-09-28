@@ -2,7 +2,7 @@ package main
 
 import ("fmt"
         "net"
-		"bufio"
+		// "bufio"
 		// "context"
         // "encoding/json"
         "sync"
@@ -14,7 +14,19 @@ import ("fmt"
 )
 
 
- type peerID  = map[string]string
+type peerID  = map[string]string
+
+type Peer struct{
+ Address string
+ Port int
+
+}
+var groups = map[string][]Peer{
+	"SDE 1": {},
+	"Ml Guys":{},
+	"Torrent Guys":{},
+}
+
 
 
  type RendezvousPoint struct {
@@ -47,9 +59,14 @@ func server(){
 		if err!=nil{
 			fmt.Println("error", err)
 		}
-		reader  := bufio.NewReader(req)
-		message ,err := reader.ReadString(byte(reader.Buffered()))
-		fmt.Println(message)
+		// reader  := bufio.NewReader(req)
+		// message ,err := reader.ReadString(byte(reader.Buffered()))
+		// fmt.Println(message)
+		list := "groups"
+       for  group := range groups{
+			list +=group+"\n"
+		}
+		req.Write([]byte(list))
 		go handle(req)
 	}
 
@@ -63,8 +80,21 @@ func handle(conn net.Conn){
    clientIP := add.IP.String()
    clientport := add.Port
    register(res, clientIP, clientport)
-
    fmt.Printf("IP %s port %d", clientIP,clientport)
+   list := "groups"
+	for  group := range groups{
+		list +=group+"\n"
+	}
+	conn.Write([]byte(list))
+
+}
+
+func sendgroups(conn net.Conn){
+	list := "groups"
+	for  group := range groups{
+		list +=group+"\n"
+	}
+	conn.Write([]byte(list))
 }
 
 func register(Ipadd Ipad, ip string , port int){
