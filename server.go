@@ -1,16 +1,16 @@
 package main
 
-import ("fmt"
-        "net"
-		// "bufio"
-		// "context"
-        // "encoding/json"
-        "sync"
-		// "github.com/pr-a-nav/Peerlink/orbitdb"
-		// "net/http"
-		
+import (
+	"bufio"
+	"fmt"
+	"net"
 
-		
+	// "bufio"
+	// "context"
+	// "encoding/json"
+	"sync"
+	// "github.com/pr-a-nav/Peerlink/orbitdb"
+	// "net/http"
 )
 
 
@@ -67,7 +67,8 @@ func server(){
 			list +=group+"\n"
 		}
 		req.Write([]byte(list))
-		go handle(req)
+		
+		handle(req)
 	}
 
 }
@@ -75,17 +76,31 @@ func server(){
 func handle(conn net.Conn){
   defer conn.Close()
    res := New("12.45.56", 45)
-
+   
    add := conn.RemoteAddr().(*net.TCPAddr)
    clientIP := add.IP.String()
    clientport := add.Port
    register(res, clientIP, clientport)
+   reader  := bufio.NewReader(conn)
+   message ,err := reader.ReadString(byte(reader.Buffered()))
+   if err!=nil{
+	fmt.Println(err)
+   }
+   fmt.Println(message)
+//    var selected string 
+//    _ , err := fmt.Fscanln(conn, &selected)
+//    if err!=nil{
+// 	fmt.Print(err)
+//    }
+//    fmt.Println(selected)
+   fmt.Println("nopes")
    fmt.Printf("IP %s port %d", clientIP,clientport)
-   list := "groups"
-	for  group := range groups{
-		list +=group+"\n"
-	}
-	conn.Write([]byte(list))
+//    list := "groups"
+// 	for  group := range groups{
+// 		list +=group+"\n"
+// 	}
+// 	conn.Write([]byte(list))
+	
 
 }
 

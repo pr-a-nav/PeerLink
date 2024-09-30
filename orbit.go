@@ -39,7 +39,7 @@ func readFromOrbitDB(cid string) {
 	fmt.Println("Data from IPFS:", readData)
 }
 
-func main() {
+func smain() {
 
 	sh = shell.NewShell("localhost:5001")
 
