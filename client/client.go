@@ -28,6 +28,7 @@ type Message struct {
 var messages =[]Message{}
 
 func fetchMessages(user string, conn net.Conn) []Message {
+   //main work lies here to decode this 
     reader := bufio.NewReader(conn)
     group,err :=reader.ReadString(byte(reader.Buffered()))
     return []Message{} 
@@ -39,6 +40,8 @@ func receive(user string , cl clientdb , conn net.Conn) {
         if !msg.IsReceived {
             fmt.Println("New message from:", msg.sender, "Content:", msg.content)
         }
+       // a very little logic here is just we double check to make sure we get message after we 
+       // got inactive
         if msg.timestamp.After(cl.lastactive){ 
            newmsg := NewMessages(msg.ID,msg.sender,msg.content,msg.timestamp,true)
            messages = append(messages, newmsg)
