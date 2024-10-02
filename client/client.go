@@ -39,7 +39,7 @@ func receive(user string , cl clientdb , conn net.Conn) {
         if !msg.IsReceived {
             fmt.Println("New message from:", msg.sender, "Content:", msg.content)
         }
-        if msg.timestamp > cl.lastactive{ 
+        if msg.timestamp.After(cl.lastactive){ 
            newmsg := NewMessages(msg.ID,msg.sender,msg.content,msg.timestamp,true)
            messages = append(messages, newmsg)
           
