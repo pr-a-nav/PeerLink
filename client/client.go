@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+    "time"
 )
 
 
@@ -12,7 +13,45 @@ type clientdb struct{
     group_name []string 
     IP []string
     port []int
+    lastactive time.Time
 
+}
+
+type Message struct {
+    ID          string
+    sender      string
+    content     string
+    timestamp   time.Time
+    IsReceived  bool 
+}
+
+func fetchMessages(user string) []Message {
+    
+    return []Message{} 
+}
+
+func receive(user string , cl clientdb) {
+    new := fetchMessages(user)
+    for _, msg := range new{
+        if !msg.IsReceived {
+            fmt.Println("New message from:", msg.sender, "Content:", msg.content)
+        }
+        if msg.timestamp > cl.lastactive{ 
+            NewMessages(msg.ID,msg.sender,msg.content,msg.timestamp,true)
+          
+        }
+    }
+}
+
+func NewMessages( ID string,sender string, content string,timestamp  time.Time, IsReceived  bool ) Message {
+    return Message{
+        ID : ID,
+        sender :sender,
+        content : content,
+        timestamp: time.Now().UTC(),
+        IsReceived: true,
+
+    }
 }
 
 func New(ip string, port int , group_name string) clientdb {
