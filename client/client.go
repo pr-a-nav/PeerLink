@@ -25,19 +25,23 @@ type Message struct {
     IsReceived  bool 
 }
 
-func fetchMessages(user string) []Message {
-    
+var messages =[]Message{}
+
+func fetchMessages(user string, conn net.Conn) []Message {
+    reader := bufio.NewReader(conn)
+    group,err :=reader.ReadString(byte(reader.Buffered()))
     return []Message{} 
 }
 
-func receive(user string , cl clientdb) {
-    new := fetchMessages(user)
+func receive(user string , cl clientdb , conn net.Conn) {
+    new := fetchMessages(user , conn)
     for _, msg := range new{
         if !msg.IsReceived {
             fmt.Println("New message from:", msg.sender, "Content:", msg.content)
         }
         if msg.timestamp > cl.lastactive{ 
-            NewMessages(msg.ID,msg.sender,msg.content,msg.timestamp,true)
+           newmsg := NewMessages(msg.ID,msg.sender,msg.content,msg.timestamp,true)
+           messages = append(messages, newmsg)
           
         }
     }
