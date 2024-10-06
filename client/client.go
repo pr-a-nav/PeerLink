@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -95,6 +96,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	defer conn.Close()
 	println("requested")
 
 	// res , err := conn.Write([]byte(" wanna join your server"))
@@ -111,12 +113,29 @@ func main() {
 	fmt.Println(group)
 	fmt.Println("why though")
 
+	fmt.Print("Enter the group you want to join: ")
 	scannner := bufio.NewScanner(os.Stdin)
 	// fmt.Println(res)
 	if scannner.Scan() {
 
 		group = scannner.Text()
 		conn.Write([]byte(group))
+	}
+	confirmation, _ := reader.ReadString('\n')
+	fmt.Print(confirmation)
+
+	// Now we can send and receive messages
+	for {
+		fmt.Print("Enter message or type 'exit' to leave :")
+		if scannner.Scan() {
+			message := scannner.Text()
+			if strings.ToLower(message) == "exit" {
+				break
+			}
+			conn.Write([]byte(message + "\n"))
+
+		}
+
 	}
 
 	conn.Close()
