@@ -180,7 +180,7 @@ func main() {
 		if err!=nil{
 			fmt.Println(("error accepting connection:",err))
 		}
-		go handleClient(conn,db)
+		go handlemessages(conn,db)
 	}
 
 	// server() included this fucntion in main itself

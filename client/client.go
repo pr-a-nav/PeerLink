@@ -89,6 +89,22 @@ func (db clientdb) addport(port int) {
 	return
 }
 
+
+func handlemessages(conn  net.Conn){
+    defer conn.Close()
+
+    reader := bufio.NewReader(conn)
+	message, err := reader.ReadString(byte(reader.Buffered()))
+    var msg = append(messages, NewMessages(message.ID, message.sender , message.content , message.timestamp , true))
+        
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(message.content)
+}
+
+
+
 func main() {
 
 	var seradd string = "localhost:9000"
@@ -151,4 +167,24 @@ func list(conn net.Conn) {
 		fmt.Println(group)
 	}
 
+}
+
+func cl_server(){
+    listener,err:=net.Listen("tcp","localhost:8000")
+	if err!=nil{
+		fmt.Println("Error starting",err)
+		return
+	}
+
+	defer listener.Close()
+
+	fmt.Println(("Server is listening on host:9000"))
+
+	for{
+		conn,err:=listener.Accept()
+		if err!=nil{
+			fmt.Println(("error accepting connection:",err))
+		}
+		go handlemessages(conn,)
+	}
 }
