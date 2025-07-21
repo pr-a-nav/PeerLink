@@ -74,18 +74,18 @@ func New(ip string, port int, group_name string) clientdb {
 	}
 }
 
-func (db clientdb) addgroupname(name string) {
-	gname := append(db.group_name, name)
-	return
+func (db *clientdb) addgroupname(name string) {
+	db.group_name = append(db.group_name, name)
 }
 
-func (db clientdb) addIP(ip string) {
-	ips := append(db.IP, ip)
-	return
+func (db *clientdb) addIP(ip string) {
+	db.IP = append(db.IP, ip)
+	return 
 }
 
 func (db clientdb) addport(port int) {
-	ports := append(db.port, port)
+	
+	db.port = append(db.port, port)
 	return
 }
 
@@ -94,16 +94,16 @@ func handlemessages(conn  net.Conn){
     defer conn.Close()
 
     reader := bufio.NewReader(conn)
-	message, err := reader.ReadString(byte(reader.Buffered()))
-    var msg = append(messages, NewMessages(message.ID, message.sender , message.content , message.timestamp , true))
-        
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(message.content)
+    message, err := reader.ReadString('\n')
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    
+    msg := NewMessages("", "", message, time.Now(), true)
+    messages = append(messages, msg)
+    fmt.Println(message) // message is already the content string
 }
-
-
 
 func main() {
 
@@ -120,23 +120,28 @@ func main() {
 	//     fmt.Println(err)
 	// }
 	reader := bufio.NewReader(conn)
-	group, err := reader.ReadString(byte(reader.Buffered()))
-	if err != nil {
-		fmt.Println(err)
+	for {
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			break
+		}
+		fmt.Print(line)
+		if line == "\n" {
+			break
+		}
 	}
 	println("read group")
-
-	fmt.Println(group)
+	// fmt.Println(group)
 	fmt.Println("why though")
 
 	fmt.Print("Enter the group you want to join: ")
 	scannner := bufio.NewScanner(os.Stdin)
 	// fmt.Println(res)
-	if scannner.Scan() {
-
-		group = scannner.Text()
-		conn.Write([]byte(group))
-	}
+	var group string
+    if scannner.Scan() {
+    group = scannner.Text()
+    conn.Write([]byte(group + "\n"))
+}
 	confirmation, _ := reader.ReadString('\n')
 	fmt.Print(confirmation)
 
@@ -183,7 +188,7 @@ func cl_server(){
 	for{
 		conn,err:=listener.Accept()
 		if err!=nil{
-			fmt.Println(("error accepting connection:",err))
+			fmt.Println(("error accepting connection:"))
 		}
 		go handlemessages(conn,)
 	}
